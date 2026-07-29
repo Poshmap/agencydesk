@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Impostazioni — AgencyDesk</title>
+<link rel="icon" href="/img/logo-marchio.png">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><img src="/img/logo-orizzontale.png" alt="AgencyDesk"></div>
+  <nav>
+    <a href="/index.html">Dashboard</a>
+    <a href="/clienti.html">Clienti</a>
+    <a href="/statistiche.html" id="nav-link-statistiche">Statistiche</a>
+    <a href="/utenti.html" id="nav-link-utenti">Utenti</a>
+    <a href="/impostazioni.html" class="active" id="nav-link-impostazioni">Impostazioni</a>
+  </nav>
+  <div class="utente-info">
+    <span id="nav-username"></span>
+    <span class="badge-ruolo" id="nav-ruolo"></span>
+    <button class="btn btn-sm" id="btn-logout">Esci</button>
+  </div>
+</div>
+
+<main>
+  <h1>Impostazioni</h1>
+
+  <div id="msg-non-admin" class="card" style="display:none">
+    Questa sezione è riservata agli amministratori.
+  </div>
+
+  <div id="contenuto-impostazioni">
+    <div class="card">
+      <h2>Alert scadenze via email</h2>
+
+      <p class="testo-muted" id="stato-smtp" style="margin-bottom:16px">Verifica configurazione…</p>
+
+      <div id="errore-email" class="errore"></div>
+      <div id="successo-email" class="errore" style="background:var(--verde-bg); color:var(--verde)"></div>
+
+      <form id="form-email" style="max-width:420px">
+        <div class="campo">
+          <label for="alert-email">Email destinatario degli alert</label>
+          <input type="email" id="alert-email" required placeholder="es. info@poshmap.com">
+        </div>
+        <div class="form-actions" style="justify-content:flex-start; margin-top:12px">
+          <button type="submit" class="btn btn-primary">Salva</button>
+          <button type="button" class="btn" id="btn-test-email">Invia email di test</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Storico invii</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data invio</th>
+              <th>Cliente</th>
+              <th>Servizio</th>
+              <th>Categoria</th>
+              <th>Scadenza servizio</th>
+            </tr>
+          </thead>
+          <tbody id="tabella-storico"></tbody>
+        </table>
+        <div class="msg-vuoto" id="msg-vuoto-storico" style="display:none">Nessun invio effettuato finora</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Ultimi accessi</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Data/ora</th>
+              <th>Username</th>
+              <th>IP</th>
+              <th>Esito</th>
+            </tr>
+          </thead>
+          <tbody id="tabella-accessi"></tbody>
+        </table>
+        <div class="msg-vuoto" id="msg-vuoto-accessi" style="display:none">Nessun accesso registrato</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/impostazioni.js"></script>
+</body>
+</html>

@@ -5,10 +5,10 @@ const router = express.Router();
 
 const CATEGORIE = [
   'Dominio',
-  'Hosting',
-  'SSL',
-  'Assistenza',
-  'Google Workspace',
+  'Servizio Wix',
+  'Assistenza ordinaria',
+  'Assistenza straordinaria',
+  'Dominio + hosting',
   'Licenza Software',
   'Altro'
 ];
@@ -34,7 +34,7 @@ function baseQuery() {
 }
 
 router.get('/', (req, res) => {
-  const { cliente_id, categoria, stato, q } = req.query;
+  const { cliente_id, categoria, stato, anno, q } = req.query;
 
   const conditions = [];
   const params = [];
@@ -50,6 +50,10 @@ router.get('/', (req, res) => {
   if (stato) {
     conditions.push('servizi.stato_rinnovo = ?');
     params.push(stato);
+  }
+  if (anno) {
+    conditions.push("strftime('%Y', servizi.data_scadenza) = ?");
+    params.push(String(anno));
   }
   if (q) {
     conditions.push('(servizi.nome_servizio LIKE ? OR clienti.nome LIKE ?)');
@@ -70,7 +74,32 @@ router.get('/', (req, res) => {
 });
 
 router.get('/meta/stats', (req, res) => {
-  const servizi = db.prepare('SELECT * FROM servizi').all();
+  const { cliente_id, categoria, stato, anno } = req.query;
+
+  const conditions = [];
+  const params = [];
+
+  if (cliente_id) {
+    conditions.push('cliente_id = ?');
+    params.push(cliente_id);
+  }
+  if (categoria) {
+    conditions.push('categoria = ?');
+    params.push(categoria);
+  }
+  if (stato) {
+    conditions.push('stato_rinnovo = ?');
+    params.push(stato);
+  }
+  if (anno) {
+    conditions.push("strftime('%Y', data_scadenza) = ?");
+    params.push(String(anno));
+  }
+
+  let sql = 'SELECT * FROM servizi';
+  if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
+
+  const servizi = db.prepare(sql).all(...params);
   const oggi = new Date();
 
   const stats = { totale: servizi.length, scaduti: 0, in_scadenza_30: 0, ok: 0 };
@@ -86,7 +115,16 @@ router.get('/meta/stats', (req, res) => {
 });
 
 router.get('/meta/opzioni', (req, res) => {
-  res.json({ categorie: CATEGORIE, stati: STATI });
+  const anni = db
+    .prepare(
+      `SELECT DISTINCT strftime('%Y', data_scadenza) AS anno
+       FROM servizi
+       ORDER BY anno DESC`
+    )
+    .all()
+    .map((r) => r.anno);
+
+  res.json({ categorie: CATEGORIE, stati: STATI, anni });
 });
 
 router.get('/:id', (req, res) => {

@@ -9,7 +9,7 @@ const ETICHETTE_URGENZA = {
 let clientiCache = [];
 
 async function caricaFiltri() {
-  const [{ categorie, stati }, clienti] = await Promise.all([
+  const [{ categorie, stati, anni }, clienti] = await Promise.all([
     api.get('/api/servizi/meta/opzioni'),
     api.get('/api/clienti')
   ]);
@@ -39,6 +39,14 @@ async function caricaFiltri() {
     opt.textContent = s;
     selStato.appendChild(opt);
   });
+
+  const selAnno = document.getElementById('f-anno');
+  anni.forEach((anno) => {
+    const opt = document.createElement('option');
+    opt.value = anno;
+    opt.textContent = anno;
+    selAnno.appendChild(opt);
+  });
 }
 
 function leggiFiltri() {
@@ -46,16 +54,19 @@ function leggiFiltri() {
   const cliente = document.getElementById('f-cliente').value;
   const categoria = document.getElementById('f-categoria').value;
   const stato = document.getElementById('f-stato').value;
+  const anno = document.getElementById('f-anno').value;
 
   if (cliente) params.set('cliente_id', cliente);
   if (categoria) params.set('categoria', categoria);
   if (stato) params.set('stato', stato);
+  if (anno) params.set('anno', anno);
 
   return params;
 }
 
 async function caricaContatori() {
-  const stats = await api.get('/api/servizi/meta/stats');
+  const params = leggiFiltri();
+  const stats = await api.get(`/api/servizi/meta/stats?${params.toString()}`);
   document.getElementById('c-totale').textContent = stats.totale;
   document.getElementById('c-scaduti').textContent = stats.scaduti;
   document.getElementById('c-scadenza').textContent = stats.in_scadenza_30;
@@ -112,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await caricaFiltri();
   await ricarica();
 
-  ['f-cliente', 'f-categoria', 'f-stato'].forEach((id) => {
+  ['f-cliente', 'f-categoria', 'f-stato', 'f-anno'].forEach((id) => {
     document.getElementById(id).addEventListener('change', ricarica);
   });
 
@@ -120,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('f-cliente').value = '';
     document.getElementById('f-categoria').value = '';
     document.getElementById('f-stato').value = '';
+    document.getElementById('f-anno').value = '';
     ricarica();
   });
 });

@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
+const { runMigrations } = require('./migrate');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(DATA_DIR)) {
@@ -15,6 +16,8 @@ db.pragma('foreign_keys = ON');
 
 const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8');
 db.exec(schema);
+
+runMigrations(db);
 
 function seedAdminUser() {
   const count = db.prepare('SELECT COUNT(*) AS n FROM users').get().n;
@@ -94,8 +97,8 @@ function seedSampleData() {
 
     insertServizio.run({
       cliente_id: c1,
-      nome_servizio: 'Hosting sito aziendale',
-      categoria: 'Hosting',
+      nome_servizio: 'Dominio + hosting sito aziendale',
+      categoria: 'Dominio + hosting',
       provider: 'Aruba',
       data_inizio: addDays(-300),
       data_scadenza: addDays(12),
@@ -106,9 +109,9 @@ function seedSampleData() {
 
     insertServizio.run({
       cliente_id: c2,
-      nome_servizio: 'Certificato SSL',
-      categoria: 'SSL',
-      provider: 'Aruba',
+      nome_servizio: 'Sito Wix — manutenzione',
+      categoria: 'Servizio Wix',
+      provider: 'Wix',
       data_inizio: addDays(-200),
       data_scadenza: addDays(45),
       costo_annuo: 29,
@@ -118,9 +121,9 @@ function seedSampleData() {
 
     insertServizio.run({
       cliente_id: c2,
-      nome_servizio: 'Google Workspace (5 utenti)',
-      categoria: 'Google Workspace',
-      provider: 'Google',
+      nome_servizio: 'Intervento urgente ripristino sito',
+      categoria: 'Assistenza straordinaria',
+      provider: 'AgencyDesk',
       data_inizio: addDays(-60),
       data_scadenza: addDays(305),
       costo_annuo: 360,
@@ -131,7 +134,7 @@ function seedSampleData() {
     insertServizio.run({
       cliente_id: c3,
       nome_servizio: 'Assistenza mensile sito',
-      categoria: 'Assistenza',
+      categoria: 'Assistenza ordinaria',
       provider: 'AgencyDesk',
       data_inizio: addDays(-400),
       data_scadenza: addDays(150),
@@ -157,7 +160,19 @@ function seedSampleData() {
   console.log('Dati di esempio creati (3 clienti, 6 servizi).');
 }
 
+function seedSettings() {
+  const row = db.prepare('SELECT 1 FROM settings WHERE key = ?').get('alert_email_to');
+  if (row) return;
+
+  const valoreIniziale = process.env.ALERT_EMAIL_TO || '';
+  db.prepare('INSERT INTO settings (key, value) VALUES (?, ?)').run(
+    'alert_email_to',
+    valoreIniziale
+  );
+}
+
 seedAdminUser();
 seedSampleData();
+seedSettings();
 
 module.exports = db;

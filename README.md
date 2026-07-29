@@ -17,7 +17,7 @@ Modifica `.env` con le tue credenziali (almeno `LOGIN_USER`, `LOGIN_PASSWORD`, `
 npm start
 ```
 
-L'app è su `http://localhost:3000`. Al primo avvio viene creato automaticamente:
+L'app è su `http://localhost:3000`, la pagina di login è su `/dev-console` (percorso volutamente non ovvio, vedi sezione Sicurezza). Al primo avvio viene creato automaticamente:
 - il database SQLite in `data/database.sqlite`
 - un utente admin con le credenziali `LOGIN_USER` / `LOGIN_PASSWORD` da `.env`
 - 3 clienti e 6 servizi di esempio, per testare subito la dashboard
@@ -33,8 +33,10 @@ Dopo il primo login puoi creare altri operatori dalla pagina **Utenti** (visibil
 | `LOGIN_USER` / `LOGIN_PASSWORD` | Credenziali del primo utente admin, usate solo al primo avvio (seed) |
 | `SESSION_SECRET` | Stringa lunga e casuale per firmare il cookie di sessione |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Configurazione SMTP per l'invio email di alert |
-| `ALERT_EMAIL_TO` | Destinatario delle email di alert scadenze |
+| `ALERT_EMAIL_TO` | Destinatario iniziale delle email di alert (solo al primo avvio: dopo si cambia dalla pagina **Impostazioni**, salvato nel database) |
 | `CRON_SECRET` | Segreto per autorizzare la chiamata esterna che avvia il controllo scadenze (vedi sotto) |
+
+La pagina **Impostazioni** (solo admin) mostra anche lo stato della configurazione SMTP/cron e lo storico delle email di alert inviate.
 
 ## Deploy su Railway
 
@@ -81,9 +83,29 @@ npm run check-alerts
 
 che esegue lo stesso controllo via script CLI, senza passare dall'endpoint HTTP.
 
+## Sicurezza
+
+Misure attualmente in atto:
+
+- Password hashate con bcrypt, mai salvate in chiaro
+- Sessione in cookie firmato, `httpOnly`, `secure` in produzione, `sameSite=lax` (mitiga CSRF sulle richieste POST/PUT/DELETE cross-site)
+- Rate limiting sul login: 5 tentativi falliti bloccano sia l'IP sia lo username per 15 minuti
+- Tutte le query al database sono parametrizzate (nessuna concatenazione di stringhe SQL)
+- Output HTML sempre escapato lato frontend (nessuna interpolazione diretta di dati utente nel DOM)
+- Ruoli admin/operatore con controlli lato server su ogni endpoint sensibile, non solo lato UI
+- In produzione (`NODE_ENV=production`) le richieste HTTP vengono reindirizzate automaticamente a HTTPS
+- Pagina di login su `/dev-console` invece di `/login`, per non essere il primo bersaglio di scanner automatici che provano percorsi standard (misura di offuscamento, non sostituisce le altre protezioni)
+- Endpoint cron interno protetto da segreto confrontato con `crypto.timingSafeEqual`
+- Security header HTTP: `Content-Security-Policy`, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, e `Strict-Transport-Security` in produzione
+- Log di ogni tentativo di login (successo/fallito, username, IP, orario), consultabile in **Impostazioni → Ultimi accessi**
+
+Da valutare come prossimi passi, prima di andare online:
+
+- Backup **off-site** del database: `npm run backup-db` crea una copia con timestamp in `data/backups/` (consistente anche con WAL attivo, tramite l'API di backup di better-sqlite3, mantiene le ultime 30 copie), ma su Railway questa cartella vive comunque nello stesso Volume — protegge da corruzione/cancellazione accidentale del file live, non da un disastro che colpisce l'intero volume. Per un vero backup off-site serve schedulare l'invio periodico di questi file altrove (S3, Google Drive, email): non implementato, richiede una scelta su dove archiviarli
+- 2FA per gli account admin, se il livello di rischio percepito lo giustifica
+- Considerare un provider email transazionale dedicato (es. Resend, Postmark) invece di SMTP generico, per deliverability e log di invio più solidi
+
 ## Note
 
 - Tutte le route (tranne login e l'endpoint interno del cron) richiedono una sessione autenticata
-- Rate limiting sul login: 5 tentativi falliti bloccano l'IP per 15 minuti
-- In produzione (`NODE_ENV=production`) le richieste HTTP vengono reindirizzate automaticamente a HTTPS
 - Non committare mai il file `.env`

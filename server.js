@@ -5,6 +5,7 @@ const express = require('express');
 const cookieSession = require('cookie-session');
 
 const httpsRedirect = require('./middleware/httpsRedirect');
+const securityHeaders = require('./middleware/securityHeaders');
 const { requireLogin } = require('./middleware/auth');
 
 const authRoutes = require('./routes/auth');
@@ -14,6 +15,8 @@ const utentiRoutes = require('./routes/utenti');
 const exportRoutes = require('./routes/export');
 const searchRoutes = require('./routes/search');
 const internalRoutes = require('./routes/internal');
+const impostazioniRoutes = require('./routes/impostazioni');
+const statisticheRoutes = require('./routes/statistiche');
 
 if (!process.env.SESSION_SECRET) {
   console.error('Errore: SESSION_SECRET non impostato in .env. Impossibile avviare il server.');
@@ -26,6 +29,7 @@ const app = express();
 app.set('trust proxy', 1);
 
 app.use(httpsRedirect);
+app.use(securityHeaders);
 app.use(express.json());
 
 app.use(
@@ -42,10 +46,12 @@ app.use(
 // Asset statici pubblici (nessun dato sensibile)
 app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
+app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
-// Pagina di login, unica pagina accessibile senza sessione
-app.get('/login.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/login.html'));
+// Pagina di login, unica pagina accessibile senza sessione.
+// Percorso non ovvio invece di /login per non essere il primo bersaglio di scanner automatici.
+app.get('/dev-console', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/dev-console.html'));
 });
 
 // API di autenticazione (login/logout non richiedono sessione attiva)
@@ -63,8 +69,18 @@ app.use('/api/servizi', serviziRoutes);
 app.use('/api/utenti', utentiRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/search', searchRoutes);
+app.use('/api/impostazioni', impostazioniRoutes);
+app.use('/api/statistiche', statisticheRoutes);
 
-const paginePrivate = ['/', '/index.html', '/clienti.html', '/cliente.html', '/utenti.html'];
+const paginePrivate = [
+  '/',
+  '/index.html',
+  '/clienti.html',
+  '/cliente.html',
+  '/utenti.html',
+  '/impostazioni.html',
+  '/statistiche.html'
+];
 paginePrivate.forEach((route) => {
   app.get(route, (req, res) => {
     const file = route === '/' ? 'index.html' : route.slice(1);

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check-alerts": "node scripts/check-alerts.js"
+    "check-alerts": "node scripts/check-alerts.js",
+    "backup-db": "node scripts/backup-db.js"
   },
   "engines": {
     "node": ">=18.0.0"

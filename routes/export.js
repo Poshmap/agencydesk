@@ -13,7 +13,7 @@ function escapeCsvField(value) {
 }
 
 router.get('/servizi.csv', (req, res) => {
-  const { cliente_id, categoria, stato, q } = req.query;
+  const { cliente_id, categoria, stato, anno, q } = req.query;
 
   const conditions = [];
   const params = [];
@@ -29,6 +29,10 @@ router.get('/servizi.csv', (req, res) => {
   if (stato) {
     conditions.push('servizi.stato_rinnovo = ?');
     params.push(stato);
+  }
+  if (anno) {
+    conditions.push("strftime('%Y', servizi.data_scadenza) = ?");
+    params.push(String(anno));
   }
   if (q) {
     conditions.push('(servizi.nome_servizio LIKE ? OR clienti.nome LIKE ?)');

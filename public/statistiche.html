@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Statistiche — AgencyDesk</title>
+<link rel="icon" href="/img/logo-marchio.png">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><img src="/img/logo-orizzontale.png" alt="AgencyDesk"></div>
+  <nav>
+    <a href="/index.html">Dashboard</a>
+    <a href="/clienti.html">Clienti</a>
+    <a href="/statistiche.html" class="active" id="nav-link-statistiche">Statistiche</a>
+    <a href="/utenti.html" id="nav-link-utenti">Utenti</a>
+    <a href="/impostazioni.html" id="nav-link-impostazioni">Impostazioni</a>
+  </nav>
+  <div class="utente-info">
+    <div class="search-box">
+      <input type="text" id="ricerca-globale" placeholder="Cerca cliente o servizio…">
+      <div class="risultati-ricerca" id="risultati-ricerca"></div>
+    </div>
+    <span id="nav-username"></span>
+    <span class="badge-ruolo" id="nav-ruolo"></span>
+    <button class="btn btn-sm" id="btn-logout">Esci</button>
+  </div>
+</div>
+
+<main>
+  <h1>Statistiche fatturato</h1>
+
+  <div id="msg-non-admin" class="card" style="display:none">
+    Questa sezione è riservata agli amministratori.
+  </div>
+
+  <div id="contenuto-statistiche">
+  <div class="toolbar">
+    <div class="campo" style="margin:0">
+      <label for="f-anno">Anno scadenza</label>
+      <select id="f-anno"><option value="">Tutti</option></select>
+    </div>
+  </div>
+
+  <div id="avviso-senza-costo" class="errore" style="background:var(--giallo-bg); color:var(--giallo); display:none"></div>
+
+  <div class="contatori">
+    <div class="contatore ok">
+      <div class="numero" id="s-confermato">—</div>
+      <div class="etichetta">Confermato (rinnovato)</div>
+    </div>
+    <div class="contatore scadenza">
+      <div class="numero" id="s-attesa">—</div>
+      <div class="etichetta">In attesa di rinnovo</div>
+    </div>
+    <div class="contatore scaduti">
+      <div class="numero" id="s-perso">—</div>
+      <div class="etichetta">Perso (annullato)</div>
+    </div>
+    <div class="contatore tot">
+      <div class="numero" id="s-totale">—</div>
+      <div class="etichetta">Totale</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Andamento per anno</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Anno</th>
+            <th>Confermato</th>
+            <th>In attesa</th>
+            <th>Perso</th>
+            <th>Totale</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-andamento"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Per categoria</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th># servizi</th>
+            <th>Totale</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-categoria"></tbody>
+      </table>
+      <div class="msg-vuoto" id="msg-vuoto-categoria" style="display:none">Nessun dato disponibile</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Per cliente</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th># servizi</th>
+            <th>Totale</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-cliente"></tbody>
+      </table>
+      <div class="msg-vuoto" id="msg-vuoto-cliente" style="display:none">Nessun dato disponibile</div>
+    </div>
+  </div>
+  </div>
+</main>
+
+<script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/statistiche.js"></script>
+</body>
+</html>

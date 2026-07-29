@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS servizi (
   cliente_id INTEGER NOT NULL REFERENCES clienti(id) ON DELETE CASCADE,
   nome_servizio TEXT NOT NULL,
   categoria TEXT NOT NULL CHECK (categoria IN (
-    'Dominio', 'Hosting', 'SSL', 'Assistenza',
-    'Google Workspace', 'Licenza Software', 'Altro'
+    'Dominio', 'Servizio Wix', 'Assistenza ordinaria', 'Assistenza straordinaria',
+    'Dominio + hosting', 'Licenza Software', 'Altro'
   )),
   provider TEXT,
   data_inizio TEXT,
@@ -41,6 +41,22 @@ CREATE TABLE IF NOT EXISTS alert_log (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE (servizio_id, data_invio)
 );
+
+CREATE TABLE IF NOT EXISTS settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS login_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT NOT NULL,
+  ip TEXT,
+  esito TEXT NOT NULL CHECK (esito IN ('successo', 'fallito')),
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_login_log_created ON login_log(created_at);
 
 CREATE INDEX IF NOT EXISTS idx_servizi_cliente ON servizi(cliente_id);
 CREATE INDEX IF NOT EXISTS idx_servizi_scadenza ON servizi(data_scadenza);

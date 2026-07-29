@@ -9,6 +9,10 @@ const {
 
 const router = express.Router();
 
+const registraLoginLog = db.prepare(
+  'INSERT INTO login_log (username, ip, esito) VALUES (?, ?, ?)'
+);
+
 router.post('/login', loginRateLimiter, (req, res) => {
   const { username, password } = req.body || {};
 
@@ -20,10 +24,12 @@ router.post('/login', loginRateLimiter, (req, res) => {
 
   if (!user || !bcrypt.compareSync(password, user.password_hash)) {
     registerFailedAttempt(req);
+    registraLoginLog.run(username, req.ip, 'fallito');
     return res.status(401).json({ error: 'Credenziali non valide' });
   }
 
   registerSuccessfulAttempt(req);
+  registraLoginLog.run(username, req.ip, 'successo');
 
   req.session.user = { id: user.id, username: user.username, role: user.role };
   res.json({ ok: true, user: req.session.user });

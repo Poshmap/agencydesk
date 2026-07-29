@@ -1,5 +1,8 @@
 :root {
-  --blu: #1d4ed8;
+  --brand-blu: #3b5bff;
+  --brand-viola: #7c3aed;
+  --brand-magenta: #c026d3;
+  --blu: #3b5bff;
   --blu-scuro: #1e3a8a;
   --grigio-100: #f5f6f8;
   --grigio-200: #e5e7eb;
@@ -47,16 +50,21 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: 104px;
   position: sticky;
   top: 0;
   z-index: 10;
 }
 
 .topbar .brand {
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: var(--blu-scuro);
+  display: flex;
+  align-items: center;
+}
+
+.topbar .brand img {
+  height: 80px;
+  width: auto;
+  display: block;
 }
 
 .topbar nav {
@@ -214,7 +222,7 @@ textarea {
 }
 
 .btn-primary {
-  background: var(--blu);
+  background: linear-gradient(135deg, var(--brand-blu), var(--brand-viola));
   color: var(--bianco);
 }
 
@@ -291,20 +299,89 @@ tr.riga-annullato { border-left: 3px solid var(--grigio-400); opacity: 0.75; }
 
 /* Login */
 .login-wrap {
+  position: relative;
   min-height: 100vh;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--blu-scuro), var(--blu));
+  background: #120f2e;
+}
+
+.login-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.75;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.login-blob.blob-1 {
+  width: 55vmax;
+  height: 55vmax;
+  top: -18%;
+  left: -15%;
+  background: radial-gradient(circle, var(--brand-blu), transparent 70%);
+  animation: fluttua1 24s ease-in-out infinite;
+}
+
+.login-blob.blob-2 {
+  width: 50vmax;
+  height: 50vmax;
+  bottom: -22%;
+  right: -12%;
+  background: radial-gradient(circle, var(--brand-magenta), transparent 70%);
+  animation: fluttua2 28s ease-in-out infinite;
+}
+
+.login-blob.blob-3 {
+  width: 40vmax;
+  height: 40vmax;
+  top: 30%;
+  left: 40%;
+  background: radial-gradient(circle, var(--brand-viola), transparent 70%);
+  animation: fluttua3 20s ease-in-out infinite;
+}
+
+@keyframes fluttua1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8vw, 6vh) scale(1.15); }
+}
+
+@keyframes fluttua2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6vw, -8vh) scale(1.1); }
+}
+
+@keyframes fluttua3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-45%, -55%) scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-blob {
+    animation: none;
+  }
 }
 
 .login-box {
+  position: relative;
+  z-index: 1;
   background: var(--bianco);
   border-radius: 12px;
   padding: 40px 36px;
   width: 100%;
   max-width: 360px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.login-logo {
+  display: block;
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 4px;
 }
 
 .login-box h1 {
@@ -329,6 +406,26 @@ tr.riga-annullato { border-left: 3px solid var(--grigio-400); opacity: 0.75; }
 .login-box .btn {
   justify-content: center;
   margin-top: 6px;
+}
+
+.login-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.login-footer a {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.login-footer a:hover {
+  color: var(--bianco);
 }
 
 .errore {

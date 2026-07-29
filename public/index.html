@@ -4,16 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dashboard — AgencyDesk</title>
+<link rel="icon" href="/img/logo-marchio.png">
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
 <div class="topbar">
-  <div class="brand">AgencyDesk</div>
+  <div class="brand"><img src="/img/logo-orizzontale.png" alt="AgencyDesk"></div>
   <nav>
     <a href="/index.html" class="active">Dashboard</a>
     <a href="/clienti.html">Clienti</a>
+    <a href="/statistiche.html" id="nav-link-statistiche">Statistiche</a>
     <a href="/utenti.html" id="nav-link-utenti">Utenti</a>
+    <a href="/impostazioni.html" id="nav-link-impostazioni">Impostazioni</a>
   </nav>
   <div class="utente-info">
     <div class="search-box">
@@ -34,13 +37,13 @@
       <div class="numero" id="c-totale">—</div>
       <div class="etichetta">Totale servizi</div>
     </div>
-    <div class="contatore scaduti">
-      <div class="numero" id="c-scaduti">—</div>
-      <div class="etichetta">Scaduti</div>
-    </div>
     <div class="contatore scadenza">
       <div class="numero" id="c-scadenza">—</div>
       <div class="etichetta">In scadenza (30gg)</div>
+    </div>
+    <div class="contatore scaduti">
+      <div class="numero" id="c-scaduti">—</div>
+      <div class="etichetta">Scaduti</div>
     </div>
     <div class="contatore ok">
       <div class="numero" id="c-ok">—</div>
@@ -66,6 +69,10 @@
       <div class="campo">
         <label for="f-stato">Stato rinnovo</label>
         <select id="f-stato"><option value="">Tutti</option></select>
+      </div>
+      <div class="campo">
+        <label for="f-anno">Anno scadenza</label>
+        <select id="f-anno"><option value="">Tutti</option></select>
       </div>
       <div class="campo">
         <button class="btn" id="btn-reset-filtri">Azzera filtri</button>

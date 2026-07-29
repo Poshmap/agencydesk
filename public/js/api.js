@@ -5,7 +5,7 @@ async function apiFetch(url, options = {}) {
   });
 
   if (res.status === 401) {
-    window.location.href = '/login.html';
+    window.location.href = '/dev-console';
     return new Promise(() => {});
   }
 

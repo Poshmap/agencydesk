@@ -9,11 +9,15 @@ async function initNav() {
     if (user.role !== 'admin') {
       const linkUtenti = document.getElementById('nav-link-utenti');
       if (linkUtenti) linkUtenti.remove();
+      const linkImpostazioni = document.getElementById('nav-link-impostazioni');
+      if (linkImpostazioni) linkImpostazioni.remove();
+      const linkStatistiche = document.getElementById('nav-link-statistiche');
+      if (linkStatistiche) linkStatistiche.remove();
     }
 
     return user;
   } catch (e) {
-    window.location.href = '/login.html';
+    window.location.href = '/dev-console';
     return null;
   }
 }
@@ -21,7 +25,7 @@ async function initNav() {
 document.addEventListener('click', (e) => {
   if (e.target && e.target.id === 'btn-logout') {
     api.post('/api/logout', {}).finally(() => {
-      window.location.href = '/login.html';
+      window.location.href = '/dev-console';
     });
   }
 });
