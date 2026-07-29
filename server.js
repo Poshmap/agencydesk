@@ -48,9 +48,18 @@ app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
-// Pagina di presentazione pubblica (marketing), root del dominio.
+// Pagina di presentazione pubblica (marketing): solo sul dominio "vetrina"
+// (agencydeskey.com / www), non sul sottodominio dell'app.
+const DOMINI_LANDING = ['agencydeskey.com', 'www.agencydeskey.com'];
+
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/landing.html'));
+  if (DOMINI_LANDING.includes(req.hostname)) {
+    return res.sendFile(path.join(__dirname, 'public/landing.html'));
+  }
+  if (req.session && req.session.user) {
+    return res.sendFile(path.join(__dirname, 'public/index.html'));
+  }
+  return res.redirect('/dev-console');
 });
 
 // Pagina di login, unica pagina accessibile senza sessione.
