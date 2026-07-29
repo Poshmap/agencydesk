@@ -53,6 +53,10 @@ function seedSampleData() {
       (cliente_id, nome_servizio, categoria, provider, data_inizio, data_scadenza, costo_annuo, stato_rinnovo, note)
     VALUES (@cliente_id, @nome_servizio, @categoria, @provider, @data_inizio, @data_scadenza, @costo_annuo, @stato_rinnovo, @note)
   `);
+  const insertRinnovo = db.prepare(`
+    INSERT INTO rinnovi (servizio_id, scadenza_precedente, scadenza_nuova)
+    VALUES (?, ?, ?)
+  `);
 
   const oggi = new Date();
   const addDays = (n) => {
@@ -91,7 +95,7 @@ function seedSampleData() {
       data_inizio: addDays(-330),
       data_scadenza: addDays(-5),
       costo_annuo: 15.9,
-      stato_rinnovo: 'Da rinnovare',
+      stato_rinnovo: 'Attivo',
       note: 'Scaduto, contattare cliente urgentemente'
     });
 
@@ -103,7 +107,7 @@ function seedSampleData() {
       data_inizio: addDays(-300),
       data_scadenza: addDays(12),
       costo_annuo: 89,
-      stato_rinnovo: 'Da rinnovare',
+      stato_rinnovo: 'Attivo',
       note: ''
     });
 
@@ -115,11 +119,11 @@ function seedSampleData() {
       data_inizio: addDays(-200),
       data_scadenza: addDays(45),
       costo_annuo: 29,
-      stato_rinnovo: 'Da rinnovare',
+      stato_rinnovo: 'Attivo',
       note: ''
     });
 
-    insertServizio.run({
+    const sRipristino = insertServizio.run({
       cliente_id: c2,
       nome_servizio: 'Intervento urgente ripristino sito',
       categoria: 'Assistenza straordinaria',
@@ -127,11 +131,12 @@ function seedSampleData() {
       data_inizio: addDays(-60),
       data_scadenza: addDays(305),
       costo_annuo: 360,
-      stato_rinnovo: 'Rinnovato',
+      stato_rinnovo: 'Attivo',
       note: ''
-    });
+    }).lastInsertRowid;
+    insertRinnovo.run(sRipristino, addDays(-60), addDays(305));
 
-    insertServizio.run({
+    const sAssistenza = insertServizio.run({
       cliente_id: c3,
       nome_servizio: 'Assistenza mensile sito',
       categoria: 'Assistenza ordinaria',
@@ -139,9 +144,10 @@ function seedSampleData() {
       data_inizio: addDays(-400),
       data_scadenza: addDays(150),
       costo_annuo: 600,
-      stato_rinnovo: 'Rinnovato',
+      stato_rinnovo: 'Attivo',
       note: 'Contratto annuale con rinnovo automatico'
-    });
+    }).lastInsertRowid;
+    insertRinnovo.run(sAssistenza, addDays(-215), addDays(150));
 
     insertServizio.run({
       cliente_id: c3,

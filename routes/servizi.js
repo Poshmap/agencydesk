@@ -13,16 +13,30 @@ const CATEGORIE = [
   'Altro'
 ];
 
-const STATI = ['Da rinnovare', 'Rinnovato', 'Annullato'];
+const STATI = ['Attivo', 'Annullato'];
 
+// Annullato = il cliente ha detto no, esce dal conteggio scadenze.
+// Attivo = tracciato solo in base alla data: urgente entro i 30gg dalla
+// scadenza (o già oltre — non si distingue "in scadenza" da "scaduto",
+// perché il servizio non dovrebbe mai arrivare a scadere davvero).
 function classificaUrgenza(servizio, oggi = new Date()) {
   if (servizio.stato_rinnovo === 'Annullato') return 'annullato';
-  const scadenza = new Date(servizio.data_scadenza);
-  const diffGiorni = Math.floor((scadenza - oggi) / 86400000);
-  if (diffGiorni < 0) return 'scaduto';
-  if (diffGiorni <= 30) return 'entro30';
-  if (diffGiorni <= 60) return 'entro60';
-  return 'ok';
+
+  const diffGiorni = giorniAllaScadenza(servizio.data_scadenza, oggi);
+  return diffGiorni <= 30 ? 'urgente' : 'ok';
+}
+
+function giorniAllaScadenza(dataScadenza, oggi = new Date()) {
+  const scadenza = new Date(dataScadenza);
+  return Math.floor((scadenza - oggi) / 86400000);
+}
+
+function arricchisci(servizio, oggi = new Date()) {
+  return {
+    ...servizio,
+    urgenza: classificaUrgenza(servizio, oggi),
+    giorni_alla_scadenza: giorniAllaScadenza(servizio.data_scadenza, oggi)
+  };
 }
 
 function baseQuery() {
@@ -68,9 +82,7 @@ router.get('/', (req, res) => {
 
   const servizi = db.prepare(sql).all(...params);
   const oggi = new Date();
-  const arricchiti = servizi.map((s) => ({ ...s, urgenza: classificaUrgenza(s, oggi) }));
-
-  res.json(arricchiti);
+  res.json(servizi.map((s) => arricchisci(s, oggi)));
 });
 
 router.get('/meta/stats', (req, res) => {
@@ -102,13 +114,12 @@ router.get('/meta/stats', (req, res) => {
   const servizi = db.prepare(sql).all(...params);
   const oggi = new Date();
 
-  const stats = { totale: servizi.length, scaduti: 0, in_scadenza_30: 0, ok: 0 };
+  const stats = { totale: servizi.length, daRinnovare: 0, ok: 0 };
 
   for (const s of servizi) {
     const urgenza = classificaUrgenza(s, oggi);
-    if (urgenza === 'scaduto') stats.scaduti += 1;
-    else if (urgenza === 'entro30') stats.in_scadenza_30 += 1;
-    else if (urgenza === 'ok' || urgenza === 'entro60') stats.ok += 1;
+    if (urgenza === 'urgente') stats.daRinnovare += 1;
+    else if (urgenza === 'ok') stats.ok += 1;
   }
 
   res.json(stats);
@@ -136,7 +147,7 @@ router.get('/:id', (req, res) => {
     return res.status(404).json({ error: 'Servizio non trovato' });
   }
 
-  res.json({ ...servizio, urgenza: classificaUrgenza(servizio) });
+  res.json(arricchisci(servizio));
 });
 
 function validaPayload(body) {
@@ -184,7 +195,7 @@ router.post('/', (req, res) => {
       data_inizio || null,
       data_scadenza,
       costo_annuo || null,
-      stato_rinnovo || 'Da rinnovare',
+      stato_rinnovo || 'Attivo',
       note || null
     );
 
@@ -192,7 +203,7 @@ router.post('/', (req, res) => {
     .prepare(`${baseQuery()} WHERE servizi.id = ?`)
     .get(result.lastInsertRowid);
 
-  res.status(201).json({ ...servizio, urgenza: classificaUrgenza(servizio) });
+  res.status(201).json(arricchisci(servizio));
 });
 
 router.put('/:id', (req, res) => {
@@ -230,7 +241,7 @@ router.put('/:id', (req, res) => {
     data_inizio || null,
     data_scadenza,
     costo_annuo || null,
-    stato_rinnovo || 'Da rinnovare',
+    stato_rinnovo || 'Attivo',
     note || null,
     req.params.id
   );
@@ -239,7 +250,38 @@ router.put('/:id', (req, res) => {
     .prepare(`${baseQuery()} WHERE servizi.id = ?`)
     .get(req.params.id);
 
-  res.json({ ...servizio, urgenza: classificaUrgenza(servizio) });
+  res.json(arricchisci(servizio));
+});
+
+router.post('/:id/rinnova', (req, res) => {
+  const servizio = db.prepare('SELECT * FROM servizi WHERE id = ?').get(req.params.id);
+  if (!servizio) return res.status(404).json({ error: 'Servizio non trovato' });
+  if (servizio.stato_rinnovo === 'Annullato') {
+    return res.status(400).json({ error: 'Un servizio annullato non può essere rinnovato' });
+  }
+
+  const scadenzaPrecedente = servizio.data_scadenza;
+  const nuovaScadenza = new Date(scadenzaPrecedente);
+  nuovaScadenza.setFullYear(nuovaScadenza.getFullYear() + 1);
+  const scadenzaNuova = nuovaScadenza.toISOString().slice(0, 10);
+
+  const rinnova = db.transaction(() => {
+    db.prepare('UPDATE servizi SET data_scadenza = ?, stato_rinnovo = ? WHERE id = ?').run(
+      scadenzaNuova,
+      'Attivo',
+      req.params.id
+    );
+    db.prepare(
+      'INSERT INTO rinnovi (servizio_id, scadenza_precedente, scadenza_nuova) VALUES (?, ?, ?)'
+    ).run(req.params.id, scadenzaPrecedente, scadenzaNuova);
+  });
+  rinnova();
+
+  const aggiornato = db
+    .prepare(`${baseQuery()} WHERE servizi.id = ?`)
+    .get(req.params.id);
+
+  res.json(arricchisci(aggiornato));
 });
 
 router.delete('/:id', (req, res) => {
@@ -252,3 +294,4 @@ router.delete('/:id', (req, res) => {
 
 module.exports = router;
 module.exports.classificaUrgenza = classificaUrgenza;
+module.exports.arricchisci = arricchisci;

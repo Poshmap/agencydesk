@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS servizi (
   data_scadenza TEXT NOT NULL,
   costo_annuo REAL,
   stato_rinnovo TEXT NOT NULL CHECK (stato_rinnovo IN (
-    'Da rinnovare', 'Rinnovato', 'Annullato'
-  )) DEFAULT 'Da rinnovare',
+    'Attivo', 'Annullato'
+  )) DEFAULT 'Attivo',
   note TEXT,
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -41,6 +41,20 @@ CREATE TABLE IF NOT EXISTS alert_log (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   UNIQUE (servizio_id, data_invio)
 );
+
+-- Log dei rinnovi: ogni volta che si preme "Rinnova" viene registrata la
+-- scadenza precedente (da attribuire l'anno) e quella nuova. Usato dalle
+-- Statistiche per calcolare il fatturato confermato.
+CREATE TABLE IF NOT EXISTS rinnovi (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  servizio_id INTEGER NOT NULL REFERENCES servizi(id) ON DELETE CASCADE,
+  scadenza_precedente TEXT NOT NULL,
+  scadenza_nuova TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_rinnovi_servizio ON rinnovi(servizio_id);
+CREATE INDEX IF NOT EXISTS idx_rinnovi_scadenza_precedente ON rinnovi(scadenza_precedente);
 
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,

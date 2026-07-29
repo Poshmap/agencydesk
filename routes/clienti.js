@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('../db');
+const { arricchisci } = require('./servizi');
 
 const router = express.Router();
 
@@ -26,21 +27,22 @@ router.get('/:id', (req, res) => {
 
   const servizi = db
     .prepare('SELECT * FROM servizi WHERE cliente_id = ? ORDER BY data_scadenza')
-    .all(req.params.id);
+    .all(req.params.id)
+    .map((s) => arricchisci(s));
 
   res.json({ ...cliente, servizi });
 });
 
 router.post('/', (req, res) => {
-  const { nome, email, telefono, note } = req.body || {};
+  const { nome, email, note } = req.body || {};
 
   if (!nome || !nome.trim()) {
     return res.status(400).json({ error: 'Il nome del cliente è obbligatorio' });
   }
 
   const result = db
-    .prepare('INSERT INTO clienti (nome, email, telefono, note) VALUES (?, ?, ?, ?)')
-    .run(nome.trim(), email || null, telefono || null, note || null);
+    .prepare('INSERT INTO clienti (nome, email, note) VALUES (?, ?, ?)')
+    .run(nome.trim(), email || null, note || null);
 
   const cliente = db.prepare('SELECT * FROM clienti WHERE id = ?').get(result.lastInsertRowid);
   res.status(201).json(cliente);
@@ -52,15 +54,14 @@ router.put('/:id', (req, res) => {
     return res.status(404).json({ error: 'Cliente non trovato' });
   }
 
-  const { nome, email, telefono, note } = req.body || {};
+  const { nome, email, note } = req.body || {};
   if (!nome || !nome.trim()) {
     return res.status(400).json({ error: 'Il nome del cliente è obbligatorio' });
   }
 
-  db.prepare('UPDATE clienti SET nome = ?, email = ?, telefono = ?, note = ? WHERE id = ?').run(
+  db.prepare('UPDATE clienti SET nome = ?, email = ?, note = ? WHERE id = ?').run(
     nome.trim(),
     email || null,
-    telefono || null,
     note || null,
     req.params.id
   );

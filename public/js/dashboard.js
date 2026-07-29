@@ -1,11 +1,3 @@
-const ETICHETTE_URGENZA = {
-  scaduto: 'Scaduto',
-  entro30: 'Entro 30gg',
-  entro60: 'Entro 60gg',
-  ok: 'OK',
-  annullato: 'Annullato'
-};
-
 let clientiCache = [];
 
 async function caricaFiltri() {
@@ -68,8 +60,7 @@ async function caricaContatori() {
   const params = leggiFiltri();
   const stats = await api.get(`/api/servizi/meta/stats?${params.toString()}`);
   document.getElementById('c-totale').textContent = stats.totale;
-  document.getElementById('c-scaduti').textContent = stats.scaduti;
-  document.getElementById('c-scadenza').textContent = stats.in_scadenza_30;
+  document.getElementById('c-scadenza').textContent = stats.daRinnovare;
   document.getElementById('c-ok').textContent = stats.ok;
 }
 
@@ -97,10 +88,7 @@ async function caricaServizi() {
       <td>${escapeHtml(s.categoria)}</td>
       <td>${escapeHtml(s.provider) || '—'}</td>
       <td>${formatValuta(s.costo_annuo)}</td>
-      <td>
-        <span class="pill ${s.urgenza}">${ETICHETTE_URGENZA[s.urgenza]}</span>
-        <div class="badge-stato" style="margin-top:4px">${escapeHtml(s.stato_rinnovo)}</div>
-      </td>
+      <td><span class="pill ${s.urgenza}">${etichettaUrgenza(s)}</span></td>
     </tr>
   `
     )

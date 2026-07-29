@@ -66,7 +66,7 @@ async function caricaAccessi() {
 
   tbody.innerHTML = righe
     .map((r) => {
-      const classe = r.esito === 'successo' ? 'ok' : 'scaduto';
+      const classe = r.esito === 'successo' ? 'ok' : 'urgente';
       return `
     <tr>
       <td>${escapeHtml(r.created_at)}</td>

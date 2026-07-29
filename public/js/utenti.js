@@ -12,7 +12,7 @@ async function caricaUtenti() {
         <td>${escapeHtml(u.created_at)}</td>
         <td>
           <button class="btn btn-sm" data-modifica="${u.id}" data-username="${escapeHtml(u.username)}" data-ruolo="${u.role}">Modifica</button>
-          <button class="btn btn-sm btn-danger" data-elimina="${u.id}" ${u.id === utenteLoggato.id ? 'disabled' : ''}>Elimina</button>
+          <button class="btn btn-sm btn-danger" data-elimina="${u.id}" ${u.id === utenteLoggato.id ? 'disabled title="Non puoi eliminare il tuo stesso account"' : ''}>Elimina</button>
         </td>
       </tr>
     `

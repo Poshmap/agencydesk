@@ -30,6 +30,18 @@ document.addEventListener('click', (e) => {
   }
 });
 
+document.addEventListener('click', (e) => {
+  const toggle = e.target.closest('#btn-menu-toggle');
+  if (toggle) {
+    document.querySelector('.topbar').classList.toggle('menu-aperto');
+    return;
+  }
+  // Clic su un link del menu mobile: richiudi il pannello.
+  if (e.target.closest('.topbar nav a')) {
+    document.querySelector('.topbar').classList.remove('menu-aperto');
+  }
+});
+
 function initRicercaGlobale() {
   const input = document.getElementById('ricerca-globale');
   const risultatiBox = document.getElementById('risultati-ricerca');

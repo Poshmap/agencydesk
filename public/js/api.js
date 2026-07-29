@@ -53,3 +53,15 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+// Un solo pill per servizio, niente doppia etichetta: la scadenza stessa
+// diventa il messaggio quando serve attenzione.
+function etichettaUrgenza(servizio) {
+  if (servizio.urgenza === 'annullato') return 'Annullato';
+  if (servizio.urgenza === 'ok') return 'OK';
+
+  const g = servizio.giorni_alla_scadenza;
+  if (g === 0) return 'Scade oggi';
+  if (g > 0) return `Scade tra ${g}gg`;
+  return `Scaduto da ${Math.abs(g)}gg`;
+}

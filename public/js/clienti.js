@@ -18,7 +18,6 @@ async function caricaClienti() {
     <tr>
       <td><a class="link-cliente" href="/cliente.html?id=${c.id}">${escapeHtml(c.nome)}</a></td>
       <td>${escapeHtml(c.email) || '—'}</td>
-      <td>${escapeHtml(c.telefono) || '—'}</td>
       <td>${c.servizi.length}</td>
       <td>
         <button class="btn btn-sm" data-modifica="${c.id}">Modifica</button>
@@ -37,7 +36,6 @@ function apriModaleCliente(cliente = null) {
   document.getElementById('cliente-id').value = cliente ? cliente.id : '';
   document.getElementById('cliente-nome').value = cliente ? cliente.nome : '';
   document.getElementById('cliente-email').value = cliente ? cliente.email || '' : '';
-  document.getElementById('cliente-telefono').value = cliente ? cliente.telefono || '' : '';
   document.getElementById('cliente-note').value = cliente ? cliente.note || '' : '';
   document.getElementById('errore-cliente').classList.remove('visibile');
   document.getElementById('overlay-cliente').classList.add('visibile');
@@ -78,7 +76,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const payload = {
       nome: document.getElementById('cliente-nome').value,
       email: document.getElementById('cliente-email').value,
-      telefono: document.getElementById('cliente-telefono').value,
       note: document.getElementById('cliente-note').value
     };
 

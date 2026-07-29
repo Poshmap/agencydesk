@@ -1,11 +1,3 @@
-const ETICHETTE_URGENZA = {
-  scaduto: 'Scaduto',
-  entro30: 'Entro 30gg',
-  entro60: 'Entro 60gg',
-  ok: 'OK',
-  annullato: 'Annullato'
-};
-
 const clienteId = new URLSearchParams(window.location.search).get('id');
 
 let opzioniServizio = { categorie: [], stati: [] };
@@ -24,7 +16,6 @@ async function caricaCliente() {
   document.title = `${clienteCorrente.nome} — AgencyDesk`;
   document.getElementById('nome-cliente').textContent = clienteCorrente.nome;
   document.getElementById('cliente-email-vista').textContent = clienteCorrente.email || '—';
-  document.getElementById('cliente-telefono-vista').textContent = clienteCorrente.telefono || '—';
   document.getElementById('cliente-note-vista').textContent = clienteCorrente.note || '—';
 
   const tbody = document.getElementById('tabella-servizi');
@@ -37,45 +28,30 @@ async function caricaCliente() {
   }
   msgVuoto.style.display = 'none';
 
-  const oggi = new Date();
   tbody.innerHTML = clienteCorrente.servizi
-    .map((s) => {
-      const urgenza = calcolaUrgenza(s, oggi);
-      return `
-      <tr class="riga-${urgenza}">
+    .map(
+      (s) => `
+      <tr class="riga-${s.urgenza}">
         <td>${formatData(s.data_scadenza)}</td>
         <td>${escapeHtml(s.nome_servizio)}</td>
         <td>${escapeHtml(s.categoria)}</td>
         <td>${escapeHtml(s.provider) || '—'}</td>
         <td>${formatValuta(s.costo_annuo)}</td>
+        <td><span class="pill ${s.urgenza}">${etichettaUrgenza(s)}</span></td>
         <td>
-          <span class="pill ${urgenza}">${ETICHETTE_URGENZA[urgenza]}</span>
-          <div class="badge-stato" style="margin-top:4px">${escapeHtml(s.stato_rinnovo)}</div>
-        </td>
-        <td>
+          ${s.stato_rinnovo === 'Attivo' ? `<button class="btn btn-sm btn-primary" data-rinnova="${s.id}">Rinnova</button>` : ''}
           <button class="btn btn-sm" data-modifica-servizio="${s.id}">Modifica</button>
           <button class="btn btn-sm btn-danger" data-elimina-servizio="${s.id}">Elimina</button>
         </td>
       </tr>
-    `;
-    })
+    `
+    )
     .join('');
-}
-
-function calcolaUrgenza(servizio, oggi) {
-  if (servizio.stato_rinnovo === 'Annullato') return 'annullato';
-  const scadenza = new Date(servizio.data_scadenza);
-  const diffGiorni = Math.floor((scadenza - oggi) / 86400000);
-  if (diffGiorni < 0) return 'scaduto';
-  if (diffGiorni <= 30) return 'entro30';
-  if (diffGiorni <= 60) return 'entro60';
-  return 'ok';
 }
 
 function apriModaleCliente() {
   document.getElementById('cliente-nome').value = clienteCorrente.nome;
   document.getElementById('cliente-email').value = clienteCorrente.email || '';
-  document.getElementById('cliente-telefono').value = clienteCorrente.telefono || '';
   document.getElementById('cliente-note').value = clienteCorrente.note || '';
   document.getElementById('errore-cliente').classList.remove('visibile');
   document.getElementById('overlay-cliente').classList.add('visibile');
@@ -96,9 +72,11 @@ function apriModaleServizio(servizio = null) {
   document.getElementById('servizio-data-scadenza').value = servizio ? servizio.data_scadenza : '';
   document.getElementById('servizio-costo').value = servizio ? servizio.costo_annuo || '' : '';
   document.getElementById('servizio-note').value = servizio ? servizio.note || '' : '';
+  document.getElementById('servizio-annullato').checked = servizio
+    ? servizio.stato_rinnovo === 'Annullato'
+    : false;
 
   popolaSelect('servizio-categoria', opzioniServizio.categorie, servizio ? servizio.categoria : null);
-  popolaSelect('servizio-stato', opzioniServizio.stati, servizio ? servizio.stato_rinnovo : 'Da rinnovare');
 
   document.getElementById('errore-servizio').classList.remove('visibile');
   document.getElementById('overlay-servizio').classList.add('visibile');
@@ -125,7 +103,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const payload = {
       nome: document.getElementById('cliente-nome').value,
       email: document.getElementById('cliente-email').value,
-      telefono: document.getElementById('cliente-telefono').value,
       note: document.getElementById('cliente-note').value
     };
     try {
@@ -146,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('tabella-servizi').addEventListener('click', async (e) => {
     const idModifica = e.target.getAttribute('data-modifica-servizio');
     const idElimina = e.target.getAttribute('data-elimina-servizio');
+    const idRinnova = e.target.getAttribute('data-rinnova');
 
     if (idModifica) {
       const servizio = clienteCorrente.servizi.find((s) => String(s.id) === idModifica);
@@ -157,11 +135,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       await api.del(`/api/servizi/${idElimina}`);
       caricaCliente();
     }
+
+    if (idRinnova) {
+      const servizio = clienteCorrente.servizi.find((s) => String(s.id) === idRinnova);
+      const nuovaData = new Date(servizio.data_scadenza);
+      nuovaData.setFullYear(nuovaData.getFullYear() + 1);
+      const conferma = confirm(
+        `Rinnovare "${servizio.nome_servizio}"?\nNuova scadenza: ${formatData(nuovaData.toISOString().slice(0, 10))}`
+      );
+      if (!conferma) return;
+      await api.post(`/api/servizi/${idRinnova}/rinnova`, {});
+      caricaCliente();
+    }
   });
 
   document.getElementById('form-servizio').addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('servizio-id').value;
+    const annullato = document.getElementById('servizio-annullato').checked;
     const payload = {
       cliente_id: Number(clienteId),
       nome_servizio: document.getElementById('servizio-nome').value,
@@ -170,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       data_inizio: document.getElementById('servizio-data-inizio').value || null,
       data_scadenza: document.getElementById('servizio-data-scadenza').value,
       costo_annuo: document.getElementById('servizio-costo').value || null,
-      stato_rinnovo: document.getElementById('servizio-stato').value,
+      stato_rinnovo: annullato ? 'Annullato' : 'Attivo',
       note: document.getElementById('servizio-note').value
     };
 
