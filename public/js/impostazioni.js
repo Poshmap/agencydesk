@@ -1,15 +1,15 @@
 async function caricaImpostazioni() {
   try {
-    const { alertEmailTo, smtpConfigured, cronConfigured } = await api.get('/api/impostazioni');
+    const { alertEmailTo, mailerConfigured, cronConfigured } = await api.get('/api/impostazioni');
 
     document.getElementById('alert-email').value = alertEmailTo || '';
 
     const statoSmtp = document.getElementById('stato-smtp');
     const partiStato = [];
     partiStato.push(
-      smtpConfigured
-        ? '✓ Configurazione SMTP (.env) presente'
-        : '✗ Configurazione SMTP (.env) mancante o incompleta — le email non verranno inviate'
+      mailerConfigured
+        ? '✓ Configurazione invio email (Resend) presente'
+        : '✗ Configurazione invio email (Resend) mancante o incompleta — le email non verranno inviate'
     );
     partiStato.push(
       cronConfigured

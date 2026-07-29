@@ -1,7 +1,7 @@
 const express = require('express');
 const db = require('../db');
 const { getSetting, setSetting } = require('../lib/settings');
-const { createTransporter, smtpConfigured } = require('../lib/mailer');
+const { sendEmail, mailerConfigured } = require('../lib/mailer');
 const { requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
   const alertEmailTo = getSetting('alert_email_to', 'ALERT_EMAIL_TO') || '';
   const cronConfigured = !!process.env.CRON_SECRET;
 
-  res.json({ alertEmailTo, smtpConfigured: smtpConfigured(), cronConfigured });
+  res.json({ alertEmailTo, mailerConfigured: mailerConfigured(), cronConfigured });
 });
 
 router.put('/', (req, res) => {
@@ -38,12 +38,10 @@ router.post('/test-email', async (req, res) => {
   }
 
   try {
-    const transporter = createTransporter();
-    await transporter.sendMail({
-      from: process.env.SMTP_USER,
+    await sendEmail({
       to: destinatario,
       subject: '[AgencyDesk] Email di test',
-      text: `Questa è un'email di test inviata da AgencyDesk il ${new Date().toLocaleString('it-IT')}.\n\nSe la ricevi, la configurazione SMTP funziona correttamente.`
+      text: `Questa è un'email di test inviata da AgencyDesk il ${new Date().toLocaleString('it-IT')}.\n\nSe la ricevi, la configurazione email funziona correttamente.`
     });
     res.json({ ok: true, destinatario });
   } catch (err) {

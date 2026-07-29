@@ -32,11 +32,13 @@ Dopo il primo login puoi creare altri operatori dalla pagina **Utenti** (visibil
 | `NODE_ENV` | `production` su Railway: abilita redirect HTTPS e cookie `secure` |
 | `LOGIN_USER` / `LOGIN_PASSWORD` | Credenziali del primo utente admin, usate solo al primo avvio (seed) |
 | `SESSION_SECRET` | Stringa lunga e casuale per firmare il cookie di sessione |
-| `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` | Configurazione SMTP per l'invio email di alert |
+| `RESEND_API_KEY` / `RESEND_FROM_EMAIL` | Credenziali [Resend](https://resend.com) per l'invio email via API HTTPS (non SMTP diretto — vedi nota sotto) |
 | `ALERT_EMAIL_TO` | Destinatario iniziale delle email di alert (solo al primo avvio: dopo si cambia dalla pagina **Impostazioni**, salvato nel database) |
 | `CRON_SECRET` | Segreto per autorizzare la chiamata esterna che avvia il controllo scadenze (vedi sotto) |
 
-La pagina **Impostazioni** (solo admin) mostra anche lo stato della configurazione SMTP/cron e lo storico delle email di alert inviate.
+**Perché Resend e non SMTP diretto**: molti host (Railway sui piani Hobby/base incluso) bloccano le porte SMTP in uscita (465, 587) per prevenire abusi — una connessione SMTP diretta resterebbe appesa senza mai rispondere. Resend invia via API HTTPS (porta 443), mai bloccata. Per usarlo: crea un account gratuito su resend.com, verifica il tuo dominio (aggiungendo i record DNS che ti propone al pannello DNS del tuo provider), crea una API key.
+
+La pagina **Impostazioni** (solo admin) mostra anche lo stato della configurazione email/cron e lo storico delle email di alert inviate.
 
 ## Deploy su Railway
 
@@ -104,7 +106,6 @@ Da valutare come prossimi passi, prima di andare online:
 
 - Backup **off-site** del database: `npm run backup-db` crea una copia con timestamp in `data/backups/` (consistente anche con WAL attivo, tramite l'API di backup di better-sqlite3, mantiene le ultime 30 copie), ma su Railway questa cartella vive comunque nello stesso Volume — protegge da corruzione/cancellazione accidentale del file live, non da un disastro che colpisce l'intero volume. Per un vero backup off-site serve schedulare l'invio periodico di questi file altrove (S3, Google Drive, email): non implementato, richiede una scelta su dove archiviarli
 - 2FA per gli account admin, se il livello di rischio percepito lo giustifica
-- Considerare un provider email transazionale dedicato (es. Resend, Postmark) invece di SMTP generico, per deliverability e log di invio più solidi
 
 ## Note
 
