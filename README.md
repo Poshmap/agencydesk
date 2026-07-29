@@ -52,9 +52,10 @@ Il filesystem di un servizio Railway è **effimero**: viene ricreato ad ogni dep
 
 Per evitarlo:
 
-1. Nel servizio web, vai su **Settings → Volumes → New Volume**
-2. Imposta il **Mount Path** su `/app/data` (deve corrispondere esattamente alla cartella `data/` nella root del progetto, dove il codice crea `database.sqlite`)
-3. Fai il deploy: al primo avvio lo schema e i dati di esempio vengono creati dentro il volume, e da quel momento sopravvivono a ogni redeploy/restart
+1. Nella vista del progetto (canvas con i blocchi dei servizi), click destro in un punto vuoto → **Volume** (oppure Command Palette **⌘K** → cerca "volume")
+2. Quando richiesto, collega il volume al servizio web
+3. Imposta il **Mount Path** su `/app/data` (deve corrispondere esattamente alla cartella `data/` nella root del progetto, dove il codice crea `database.sqlite`)
+4. Railway rifà il deploy automaticamente: al primo avvio lo schema e i dati di esempio vengono creati dentro il volume, e da quel momento sopravvivono a ogni redeploy/restart
 
 ### 3. Alert email scadenze (Cron Job)
 
