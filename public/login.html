@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Accedi — AgencyDesk</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-box">
+    <h1>AgencyDesk</h1>
+    <p class="sottotitolo">Accedi per gestire clienti e scadenze</p>
+    <div id="errore" class="errore"></div>
+    <form id="form-login">
+      <div class="campo">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required autofocus>
+      </div>
+      <div class="campo">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Accedi</button>
+    </form>
+  </div>
+</div>
+<script src="/js/login.js"></script>
+</body>
+</html>

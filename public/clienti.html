@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clienti — AgencyDesk</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">AgencyDesk</div>
+  <nav>
+    <a href="/index.html">Dashboard</a>
+    <a href="/clienti.html" class="active">Clienti</a>
+    <a href="/utenti.html" id="nav-link-utenti">Utenti</a>
+  </nav>
+  <div class="utente-info">
+    <div class="search-box">
+      <input type="text" id="ricerca-globale" placeholder="Cerca cliente o servizio…">
+      <div class="risultati-ricerca" id="risultati-ricerca"></div>
+    </div>
+    <span id="nav-username"></span>
+    <span class="badge-ruolo" id="nav-ruolo"></span>
+    <button class="btn btn-sm" id="btn-logout">Esci</button>
+  </div>
+</div>
+
+<main>
+  <div class="toolbar">
+    <h1 style="margin:0">Clienti</h1>
+    <button class="btn btn-primary" id="btn-nuovo-cliente">+ Nuovo cliente</button>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefono</th>
+            <th># Servizi</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tabella-clienti"></tbody>
+      </table>
+      <div class="msg-vuoto" id="msg-vuoto" style="display:none">Nessun cliente presente</div>
+    </div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay-cliente">
+  <div class="modale">
+    <div class="modale-header">
+      <h2 id="titolo-modale-cliente">Nuovo cliente</h2>
+      <button id="chiudi-modale-cliente">&times;</button>
+    </div>
+    <div id="errore-cliente" class="errore"></div>
+    <form id="form-cliente">
+      <input type="hidden" id="cliente-id">
+      <div class="campo">
+        <label for="cliente-nome">Nome *</label>
+        <input type="text" id="cliente-nome" required>
+      </div>
+      <div class="campo">
+        <label for="cliente-email">Email</label>
+        <input type="email" id="cliente-email">
+      </div>
+      <div class="campo">
+        <label for="cliente-telefono">Telefono</label>
+        <input type="text" id="cliente-telefono">
+      </div>
+      <div class="campo">
+        <label for="cliente-note">Note</label>
+        <textarea id="cliente-note"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="annulla-cliente">Annulla</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/clienti.js"></script>
+</body>
+</html>

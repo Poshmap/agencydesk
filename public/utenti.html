@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utenti — AgencyDesk</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">AgencyDesk</div>
+  <nav>
+    <a href="/index.html">Dashboard</a>
+    <a href="/clienti.html">Clienti</a>
+    <a href="/utenti.html" class="active" id="nav-link-utenti">Utenti</a>
+  </nav>
+  <div class="utente-info">
+    <span id="nav-username"></span>
+    <span class="badge-ruolo" id="nav-ruolo"></span>
+    <button class="btn btn-sm" id="btn-logout">Esci</button>
+  </div>
+</div>
+
+<main>
+  <div class="toolbar">
+    <h1 style="margin:0">Gestione utenti</h1>
+    <button class="btn btn-primary" id="btn-nuovo-utente">+ Nuovo operatore</button>
+  </div>
+
+  <div id="msg-non-admin" class="card" style="display:none">
+    Questa sezione è riservata agli amministratori.
+  </div>
+
+  <div class="card" id="card-utenti">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Ruolo</th>
+            <th>Creato il</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tabella-utenti"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay-utente">
+  <div class="modale">
+    <div class="modale-header">
+      <h2 id="titolo-modale-utente">Nuovo operatore</h2>
+      <button id="chiudi-modale-utente">&times;</button>
+    </div>
+    <div id="errore-utente" class="errore"></div>
+    <form id="form-utente">
+      <input type="hidden" id="utente-id">
+      <div class="campo">
+        <label for="utente-username">Username *</label>
+        <input type="text" id="utente-username" required>
+      </div>
+      <div class="campo">
+        <label for="utente-password">Password <span id="hint-password" class="testo-muted"></span></label>
+        <input type="password" id="utente-password" autocomplete="new-password">
+      </div>
+      <div class="campo">
+        <label for="utente-ruolo">Ruolo *</label>
+        <select id="utente-ruolo" required>
+          <option value="operatore">Operatore</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="annulla-utente">Annulla</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/utenti.js"></script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard — AgencyDesk</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">AgencyDesk</div>
+  <nav>
+    <a href="/index.html" class="active">Dashboard</a>
+    <a href="/clienti.html">Clienti</a>
+    <a href="/utenti.html" id="nav-link-utenti">Utenti</a>
+  </nav>
+  <div class="utente-info">
+    <div class="search-box">
+      <input type="text" id="ricerca-globale" placeholder="Cerca cliente o servizio…">
+      <div class="risultati-ricerca" id="risultati-ricerca"></div>
+    </div>
+    <span id="nav-username"></span>
+    <span class="badge-ruolo" id="nav-ruolo"></span>
+    <button class="btn btn-sm" id="btn-logout">Esci</button>
+  </div>
+</div>
+
+<main>
+  <h1>Dashboard scadenze</h1>
+
+  <div class="contatori">
+    <div class="contatore tot">
+      <div class="numero" id="c-totale">—</div>
+      <div class="etichetta">Totale servizi</div>
+    </div>
+    <div class="contatore scaduti">
+      <div class="numero" id="c-scaduti">—</div>
+      <div class="etichetta">Scaduti</div>
+    </div>
+    <div class="contatore scadenza">
+      <div class="numero" id="c-scadenza">—</div>
+      <div class="etichetta">In scadenza (30gg)</div>
+    </div>
+    <div class="contatore ok">
+      <div class="numero" id="c-ok">—</div>
+      <div class="etichetta">OK</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <h2 style="margin:0">Servizi</h2>
+      <a class="btn" id="btn-export" href="/api/export/servizi.csv">Esporta CSV</a>
+    </div>
+
+    <div class="filtri">
+      <div class="campo">
+        <label for="f-cliente">Cliente</label>
+        <select id="f-cliente"><option value="">Tutti</option></select>
+      </div>
+      <div class="campo">
+        <label for="f-categoria">Categoria</label>
+        <select id="f-categoria"><option value="">Tutte</option></select>
+      </div>
+      <div class="campo">
+        <label for="f-stato">Stato rinnovo</label>
+        <select id="f-stato"><option value="">Tutti</option></select>
+      </div>
+      <div class="campo">
+        <button class="btn" id="btn-reset-filtri">Azzera filtri</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Scadenza</th>
+            <th>Cliente</th>
+            <th>Servizio</th>
+            <th>Categoria</th>
+            <th>Provider</th>
+            <th>Costo/anno</th>
+            <th>Stato</th>
+          </tr>
+        </thead>
+        <tbody id="tabella-servizi">
+        </tbody>
+      </table>
+      <div class="msg-vuoto" id="msg-vuoto" style="display:none">Nessun servizio trovato</div>
+    </div>
+  </div>
+</main>
+
+<script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>

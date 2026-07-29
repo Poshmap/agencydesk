@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dettaglio cliente — AgencyDesk</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">AgencyDesk</div>
+  <nav>
+    <a href="/index.html">Dashboard</a>
+    <a href="/clienti.html" class="active">Clienti</a>
+    <a href="/utenti.html" id="nav-link-utenti">Utenti</a>
+  </nav>
+  <div class="utente-info">
+    <div class="search-box">
+      <input type="text" id="ricerca-globale" placeholder="Cerca cliente o servizio…">
+      <div class="risultati-ricerca" id="risultati-ricerca"></div>
+    </div>
+    <span id="nav-username"></span>
+    <span class="badge-ruolo" id="nav-ruolo"></span>
+    <button class="btn btn-sm" id="btn-logout">Esci</button>
+  </div>
+</div>
+
+<main>
+  <p><a href="/clienti.html">&larr; Torna ai clienti</a></p>
+
+  <div class="card">
+    <div class="toolbar">
+      <h1 style="margin:0" id="nome-cliente">—</h1>
+      <button class="btn" id="btn-modifica-cliente">Modifica cliente</button>
+    </div>
+    <p><strong>Email:</strong> <span id="cliente-email-vista">—</span></p>
+    <p><strong>Telefono:</strong> <span id="cliente-telefono-vista">—</span></p>
+    <p><strong>Note:</strong> <span id="cliente-note-vista">—</span></p>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <h2 style="margin:0">Servizi</h2>
+      <button class="btn btn-primary" id="btn-nuovo-servizio">+ Nuovo servizio</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Scadenza</th>
+            <th>Servizio</th>
+            <th>Categoria</th>
+            <th>Provider</th>
+            <th>Costo/anno</th>
+            <th>Stato</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tabella-servizi"></tbody>
+      </table>
+      <div class="msg-vuoto" id="msg-vuoto-servizi" style="display:none">Nessun servizio per questo cliente</div>
+    </div>
+  </div>
+</main>
+
+<!-- Modale cliente -->
+<div class="overlay" id="overlay-cliente">
+  <div class="modale">
+    <div class="modale-header">
+      <h2>Modifica cliente</h2>
+      <button id="chiudi-modale-cliente">&times;</button>
+    </div>
+    <div id="errore-cliente" class="errore"></div>
+    <form id="form-cliente">
+      <div class="campo">
+        <label for="cliente-nome">Nome *</label>
+        <input type="text" id="cliente-nome" required>
+      </div>
+      <div class="campo">
+        <label for="cliente-email">Email</label>
+        <input type="email" id="cliente-email">
+      </div>
+      <div class="campo">
+        <label for="cliente-telefono">Telefono</label>
+        <input type="text" id="cliente-telefono">
+      </div>
+      <div class="campo">
+        <label for="cliente-note">Note</label>
+        <textarea id="cliente-note"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="annulla-cliente">Annulla</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modale servizio -->
+<div class="overlay" id="overlay-servizio">
+  <div class="modale">
+    <div class="modale-header">
+      <h2 id="titolo-modale-servizio">Nuovo servizio</h2>
+      <button id="chiudi-modale-servizio">&times;</button>
+    </div>
+    <div id="errore-servizio" class="errore"></div>
+    <form id="form-servizio">
+      <input type="hidden" id="servizio-id">
+      <div class="form-grid">
+        <div class="campo full">
+          <label for="servizio-nome">Nome servizio *</label>
+          <input type="text" id="servizio-nome" required>
+        </div>
+        <div class="campo">
+          <label for="servizio-categoria">Categoria *</label>
+          <select id="servizio-categoria" required></select>
+        </div>
+        <div class="campo">
+          <label for="servizio-provider">Provider</label>
+          <input type="text" id="servizio-provider" placeholder="es. Aruba, Register…">
+        </div>
+        <div class="campo">
+          <label for="servizio-data-inizio">Data inizio</label>
+          <input type="date" id="servizio-data-inizio">
+        </div>
+        <div class="campo">
+          <label for="servizio-data-scadenza">Data scadenza *</label>
+          <input type="date" id="servizio-data-scadenza" required>
+        </div>
+        <div class="campo">
+          <label for="servizio-costo">Costo annuo (€)</label>
+          <input type="number" id="servizio-costo" step="0.01" min="0">
+        </div>
+        <div class="campo">
+          <label for="servizio-stato">Stato rinnovo</label>
+          <select id="servizio-stato"></select>
+        </div>
+        <div class="campo full">
+          <label for="servizio-note">Note</label>
+          <textarea id="servizio-note"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" id="annulla-servizio">Annulla</button>
+        <button type="submit" class="btn btn-primary">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/api.js"></script>
+<script src="/js/nav.js"></script>
+<script src="/js/cliente.js"></script>
+</body>
+</html>
