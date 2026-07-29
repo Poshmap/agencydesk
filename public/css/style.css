@@ -121,7 +121,7 @@ a:hover {
   }
 
   .topbar .brand img {
-    height: 44px;
+    height: 80px;
   }
 
   .menu-toggle {
@@ -135,12 +135,15 @@ a:hover {
     order: 3;
   }
 
-  .topbar.menu-aperto nav,
-  .topbar.menu-aperto .utente-info {
+  .topbar.menu-aperto nav {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     gap: 4px;
+  }
+
+  .topbar.menu-aperto .utente-info {
+    display: flex;
   }
 
   .topbar nav a {
@@ -149,12 +152,18 @@ a:hover {
   }
 
   .topbar .utente-info {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
     padding-top: 10px;
     border-top: 1px solid var(--grigio-200);
-    flex-wrap: wrap;
   }
 
-  .search-box {
+  .topbar .utente-info #btn-logout {
+    margin-left: auto;
+  }
+
+  .topbar .search-box {
     width: 100%;
     order: -1;
   }
@@ -349,6 +358,7 @@ tbody tr:hover {
   border-radius: 999px;
   font-size: 0.78rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .pill.urgente { background: var(--rosso-bg); color: var(--rosso); }
