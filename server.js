@@ -48,6 +48,11 @@ app.use('/css', express.static(path.join(__dirname, 'public/css')));
 app.use('/js', express.static(path.join(__dirname, 'public/js')));
 app.use('/img', express.static(path.join(__dirname, 'public/img')));
 
+// Pagina di presentazione pubblica (marketing), root del dominio.
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/landing.html'));
+});
+
 // Pagina di login, unica pagina accessibile senza sessione.
 // Percorso non ovvio invece di /login per non essere il primo bersaglio di scanner automatici.
 app.get('/dev-console', (req, res) => {
@@ -73,7 +78,6 @@ app.use('/api/impostazioni', impostazioniRoutes);
 app.use('/api/statistiche', statisticheRoutes);
 
 const paginePrivate = [
-  '/',
   '/index.html',
   '/clienti.html',
   '/cliente.html',
@@ -83,8 +87,7 @@ const paginePrivate = [
 ];
 paginePrivate.forEach((route) => {
   app.get(route, (req, res) => {
-    const file = route === '/' ? 'index.html' : route.slice(1);
-    res.sendFile(path.join(__dirname, 'public', file));
+    res.sendFile(path.join(__dirname, 'public', route.slice(1)));
   });
 });
 
