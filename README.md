@@ -69,14 +69,15 @@ Per configurarlo:
 
 1. Nello stesso progetto Railway, crea un nuovo servizio: **New → Empty Service** (non serve collegare questo repo)
 2. In **Settings** del nuovo servizio:
-   - **Source**: immagine Docker `curlimages/curl` (oppure lascia il deploy da repo se preferisci, basta che il comando finale sia quello sotto)
-   - **Custom Start Command**:
+   - **Source**: immagine Docker `curlimages/curl`
+   - **Custom Start Command** — nota il `sh -c` che avvolge il comando: dato che il servizio è un'immagine Docker (non una build da questo repo), Railway esegue lo start command in **forma "exec"**, che *non* espande le variabili d'ambiente. Senza `sh -c`, `$CRON_SECRET` verrebbe passato come testo letterale invece che sostituito col valore vero, e ogni esecuzione fallirebbe con 401 (capitato in produzione, richiesto un giro di debug per scoprirlo):
      ```
-     curl -sf -X POST https://<il-tuo-dominio-railway>/api/internal/check-alerts -H "x-cron-secret: $CRON_SECRET"
+     sh -c "curl -sf -X POST https://<il-tuo-dominio>/api/internal/check-alerts -H \"x-cron-secret: $CRON_SECRET\""
      ```
-   - **Cron Schedule**: `0 8 * * *`
+   - **Cron Schedule**: `0 7 * * *` — attenzione, gli orari Railway sono sempre in **UTC**, non ora italiana (7:00 UTC = 8:00 CET in inverno, 9:00 CEST in estate; i cron non si adattano da soli al cambio ora legale)
    - Aggiungi la variabile `CRON_SECRET` con lo stesso valore usato nel servizio web
-3. Salva: da quel momento, ogni giorno alle 8:00 il job chiama l'endpoint, che controlla i servizi in scadenza nei prossimi 30 giorni e invia le email (loggando gli invii per non duplicarli nello stesso giorno)
+3. Salva e fai **Deploy** (le modifiche restano "pending" finché non lo confermi esplicitamente)
+4. Per verificare che funzioni senza aspettare la schedulazione: tab **Cron Runs** del servizio → **Run now**. Un pallino verde nell'esecuzione conferma che è andata a buon fine; lo stesso tab mostra anche lo storico delle esecuzioni schedulate
 
 In locale (o per un test manuale), puoi anche eseguire direttamente:
 
