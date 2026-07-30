@@ -1,0 +1,219 @@
+:root {
+  --brand-blu: #2563eb;
+  --brand-viola: #7c3aed;
+  --brand-magenta: #ec4899;
+  --brand-turchese: #06b6d4;
+  --brand-indaco-scuro: #1e1b4b;
+  --blu: #2563eb;
+  --grigio-200: #e5e7eb;
+  --grigio-800: #1f2937;
+  --bianco: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--grigio-800);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--blu);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--grigio-200);
+  color: var(--grigio-800);
+}
+
+.btn:hover {
+  filter: brightness(0.96);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand-blu), var(--brand-viola));
+  color: var(--bianco);
+}
+
+/* Sfondo animato */
+.login-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.75;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.login-blob.blob-1 {
+  width: 55vmax;
+  height: 55vmax;
+  top: -18%;
+  left: -15%;
+  background: radial-gradient(circle, var(--brand-blu), transparent 70%);
+  animation: fluttua1 24s ease-in-out infinite;
+}
+
+.login-blob.blob-2 {
+  width: 50vmax;
+  height: 50vmax;
+  bottom: -22%;
+  right: -12%;
+  background: radial-gradient(circle, var(--brand-magenta), transparent 70%);
+  animation: fluttua2 28s ease-in-out infinite;
+}
+
+.login-blob.blob-3 {
+  width: 40vmax;
+  height: 40vmax;
+  top: 30%;
+  left: 40%;
+  background: radial-gradient(circle, var(--brand-viola), transparent 70%);
+  animation: fluttua3 20s ease-in-out infinite;
+}
+
+@keyframes fluttua1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8vw, 6vh) scale(1.15); }
+}
+
+@keyframes fluttua2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6vw, -8vh) scale(1.1); }
+}
+
+@keyframes fluttua3 {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-45%, -55%) scale(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-blob {
+    animation: none;
+  }
+}
+
+.login-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  text-align: center;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.login-footer a {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+.login-footer a:hover {
+  color: var(--bianco);
+}
+
+/* Landing */
+.landing-wrap {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-indaco-scuro);
+  padding: 60px 24px;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 1;
+  max-width: 780px;
+  width: 100%;
+  text-align: center;
+  color: var(--bianco);
+}
+
+.landing-icona {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+.landing-titolo {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: var(--bianco);
+}
+
+.landing-titolo span {
+  color: var(--brand-viola);
+  font-weight: 700;
+}
+
+.landing-tagline {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 560px;
+  margin: 0 auto 44px;
+}
+
+.landing-pillars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 44px;
+}
+
+.landing-pillar {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.landing-pillar .icona {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 14px;
+}
+
+.landing-pillar h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: var(--bianco);
+}
+
+.landing-pillar p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+.landing-cta {
+  display: inline-flex;
+  padding: 14px 36px;
+  font-size: 1rem;
+}
