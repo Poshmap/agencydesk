@@ -5,7 +5,15 @@ const router = express.Router();
 
 function escapeCsvField(value) {
   if (value === null || value === undefined) return '';
-  const str = String(value);
+  let str = String(value);
+
+  // Neutralizza la formula injection: se il campo inizia con un carattere
+  // che Excel/Google Sheets interpretano come inizio formula, lo si fa
+  // precedere da un apostrofo così viene trattato come testo.
+  if (/^[=+\-@\t\r]/.test(str)) {
+    str = `'${str}`;
+  }
+
   if (/[",\n;]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`;
   }
