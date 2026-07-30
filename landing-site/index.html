@@ -9,20 +9,95 @@
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<div class="landing-wrap">
-  <div class="login-blob blob-1"></div>
-  <div class="login-blob blob-2"></div>
-  <div class="login-blob blob-3"></div>
+<div class="landing-page">
 
-  <div class="landing-content">
-    <img src="/img/logo-marchio.png" alt="AgencyDesk" class="landing-icona">
-    <h1 class="landing-titolo">AgencyDesk <span>KEY</span></h1>
+  <section class="landing-hero">
+    <div class="login-blob blob-1"></div>
+    <div class="login-blob blob-2"></div>
+    <div class="login-blob blob-3"></div>
 
-    <p class="landing-tagline">
-      La piattaforma centralizzata per gestire clienti, scadenze e rinnovi della tua
-      web agency: domini, hosting, assistenza e licenze, tutto in un unico posto.
-    </p>
+    <div class="landing-content">
+      <img src="/img/logo-marchio.png" alt="AgencyDesk" class="landing-icona">
+      <h1 class="landing-titolo">AgencyDesk <span>KEY</span></h1>
 
+      <p class="landing-tagline">
+        La piattaforma centralizzata per gestire clienti, scadenze e rinnovi della tua
+        web agency: domini, hosting, assistenza e licenze, tutto in un unico posto.
+      </p>
+
+      <a href="mailto:info@poshmap.com?subject=Richiesta%20informazioni%20AgencyDesk" class="btn btn-primary landing-cta">Richiedi info</a>
+
+      <div class="landing-scroll-hint">
+        <span>Scopri di più</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="landing-showcase reveal">
+    <div class="showcase-intro">
+      <h2>Ogni scadenza, sempre sotto controllo</h2>
+      <p>Una dashboard unica per domini, hosting, siti Wix, assistenza e licenze software: colpo d'occhio immediato su cosa sta per scadere.</p>
+    </div>
+
+    <div class="mockup-stage">
+      <div class="mockup-browser mockup-principale">
+        <div class="mockup-chrome">
+          <span class="mockup-dot"></span><span class="mockup-dot"></span><span class="mockup-dot"></span>
+          <span class="mockup-url">app.agencydeskey.com</span>
+        </div>
+        <div class="mockup-topbar">
+          <img src="/img/logo-marchio.png" alt="" class="mockup-logo">
+          <div class="mockup-nav">
+            <span class="attivo">Dashboard</span><span>Clienti</span><span>Statistiche</span>
+          </div>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-contatori">
+            <div class="mockup-contatore"><strong>42</strong><span>Totale servizi</span></div>
+            <div class="mockup-contatore rosso"><strong>5</strong><span>Da rinnovare</span></div>
+            <div class="mockup-contatore verde"><strong>37</strong><span>OK</span></div>
+          </div>
+          <div class="mockup-tabella">
+            <div class="mockup-riga">
+              <span class="blur">Rossi Costruzioni Srl</span>
+              <span class="blur">Dominio + hosting</span>
+              <span class="mockup-pill urgente">Scade tra 12gg</span>
+            </div>
+            <div class="mockup-riga">
+              <span class="blur">Bella Vista Ristorante</span>
+              <span class="blur">Sito Wix — manutenzione</span>
+              <span class="mockup-pill ok">OK</span>
+            </div>
+            <div class="mockup-riga">
+              <span class="blur">Studio Legale Ferrari</span>
+              <span class="blur">Google Workspace</span>
+              <span class="mockup-pill urgente">Scade tra 3gg</span>
+            </div>
+            <div class="mockup-riga">
+              <span class="blur">Bianchi Impianti Srl</span>
+              <span class="blur">Licenza gestionale</span>
+              <span class="mockup-pill ok">OK</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mockup-browser mockup-secondario">
+        <div class="mockup-body compatto">
+          <div class="mockup-dettaglio-titolo blur">Rossi Costruzioni Srl</div>
+          <div class="mockup-riga">
+            <span class="blur">Dominio rossicostruzioni.it</span>
+            <span class="mockup-pill urgente">Scaduto da 5gg</span>
+          </div>
+          <button class="mockup-btn-rinnova" tabindex="-1">↻ Rinnova</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="landing-features reveal">
+    <h2>Perché AgencyDesk</h2>
     <div class="landing-pillars">
       <div class="landing-pillar">
         <svg class="icona" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,14 +124,43 @@
         <h3>Connessione</h3>
         <p>Persone, progetti e scadenze collegati: niente si perde tra un foglio e l'altro.</p>
       </div>
+      <div class="landing-pillar">
+        <svg class="icona" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 6V16M20 6L14 12M20 6L26 12" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 18C8 24 13 34 20 34C27 34 32 24 32 18" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <h3>Automazione</h3>
+        <p>Alert via email prima di ogni scadenza e rinnovo con un click, senza fogli da aggiornare a mano.</p>
+      </div>
     </div>
+  </section>
 
+  <section class="landing-final-cta reveal">
+    <h2>Vuoi vederlo in azione?</h2>
+    <p>Scrivici: ti mostriamo com'è organizzata l'area riservata della tua agenzia.</p>
     <a href="mailto:info@poshmap.com?subject=Richiesta%20informazioni%20AgencyDesk" class="btn btn-primary landing-cta">Richiedi info</a>
-  </div>
+  </section>
 
-  <footer class="login-footer">
+  <footer class="landing-footer">
     Developed by <a href="https://www.poshmapcrew.com" target="_blank" rel="noopener noreferrer">Poshmap</a>
   </footer>
 </div>
+
+<script>
+  var osservati = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visibile');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    osservati.forEach(function (el) { observer.observe(el); });
+  } else {
+    osservati.forEach(function (el) { el.classList.add('visibile'); });
+  }
+</script>
 </body>
 </html>

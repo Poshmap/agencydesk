@@ -110,35 +110,19 @@ a:hover {
   }
 }
 
-.login-footer {
-  position: absolute;
-  bottom: 24px;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  text-align: center;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.65);
-}
-
-.login-footer a {
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-}
-
-.login-footer a:hover {
-  color: var(--bianco);
-}
-
 /* Landing */
-.landing-wrap {
+.landing-page {
+  background: var(--brand-indaco-scuro);
+  overflow-x: hidden;
+}
+
+.landing-hero {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--brand-indaco-scuro);
   padding: 60px 24px;
 }
 
@@ -216,4 +200,345 @@ a:hover {
   display: inline-flex;
   padding: 14px 36px;
   font-size: 1rem;
+}
+
+.landing-scroll-hint {
+  margin-top: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  animation: rimbalza 2.2s ease-in-out infinite;
+}
+
+.landing-scroll-hint svg {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes rimbalza {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(6px); opacity: 1; }
+}
+
+/* Reveal on scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visibile {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Showcase prodotto */
+.landing-showcase {
+  position: relative;
+  z-index: 1;
+  padding: 90px 24px 60px;
+  max-width: 1080px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.showcase-intro h2 {
+  font-size: 1.9rem;
+  margin: 0 0 12px;
+  color: var(--bianco);
+}
+
+.showcase-intro p {
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 520px;
+  margin: 0 auto 56px;
+  line-height: 1.6;
+}
+
+.mockup-stage {
+  position: relative;
+  padding: 20px 0 80px;
+}
+
+.mockup-browser {
+  background: #10132b;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  text-align: left;
+  overflow: hidden;
+}
+
+.mockup-principale {
+  max-width: 760px;
+  margin: 0 auto;
+  animation: fluttuaMockup1 9s ease-in-out infinite;
+}
+
+.mockup-secondario {
+  position: absolute;
+  right: 4%;
+  bottom: -50px;
+  width: 280px;
+  z-index: 2;
+  animation: fluttuaMockup2 8s ease-in-out infinite;
+}
+
+@keyframes fluttuaMockup1 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-0.6deg); }
+}
+
+@keyframes fluttuaMockup2 {
+  0%, 100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(10px) rotate(3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-scroll-hint,
+  .mockup-principale,
+  .mockup-secondario {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.mockup-chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.mockup-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.mockup-url {
+  margin-left: 10px;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: monospace;
+}
+
+.mockup-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mockup-logo {
+  height: 22px;
+}
+
+.mockup-nav {
+  display: flex;
+  gap: 16px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mockup-nav .attivo {
+  color: var(--bianco);
+  font-weight: 600;
+}
+
+.mockup-body {
+  padding: 18px;
+}
+
+.mockup-body.compatto {
+  padding: 16px;
+}
+
+.mockup-contatori {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mockup-contatore {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.mockup-contatore strong {
+  display: block;
+  font-size: 1.3rem;
+  color: var(--bianco);
+}
+
+.mockup-contatore span {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mockup-contatore.rosso strong { color: #f87171; }
+.mockup-contatore.verde strong { color: #4ade80; }
+
+.mockup-tabella {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mockup-riga {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  font-size: 0.78rem;
+}
+
+.mockup-riga span:first-child {
+  flex: 1.2;
+  color: var(--bianco);
+}
+
+.mockup-riga span:nth-child(2) {
+  flex: 1;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mockup-pill {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.mockup-pill.urgente { background: rgba(220, 38, 38, 0.18); color: #f87171; }
+.mockup-pill.ok { background: rgba(22, 163, 74, 0.18); color: #4ade80; }
+
+.blur {
+  filter: blur(4.5px);
+  user-select: none;
+  transition: filter 0.4s ease;
+}
+
+.mockup-browser:hover .blur {
+  filter: blur(2px);
+}
+
+.mockup-dettaglio-titolo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--bianco);
+  margin-bottom: 12px;
+}
+
+.mockup-btn-rinnova {
+  margin-top: 12px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--bianco);
+  background: linear-gradient(135deg, var(--brand-blu), var(--brand-viola));
+  cursor: default;
+}
+
+/* Sezione funzionalità */
+.landing-features {
+  position: relative;
+  z-index: 1;
+  padding: 20px 24px 100px;
+  max-width: 1040px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.landing-features h2 {
+  font-size: 1.7rem;
+  margin: 0 0 40px;
+  color: var(--bianco);
+}
+
+/* CTA finale */
+.landing-final-cta {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 80px 24px 100px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.landing-final-cta h2 {
+  font-size: 1.7rem;
+  margin: 0 0 10px;
+  color: var(--bianco);
+}
+
+.landing-final-cta p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 28px;
+}
+
+.landing-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 28px 24px 40px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.landing-footer a {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600;
+}
+
+.landing-footer a:hover {
+  color: var(--bianco);
+}
+
+@media (max-width: 720px) {
+  .mockup-secondario {
+    position: static;
+    width: 100%;
+    max-width: 320px;
+    margin: 20px auto 0;
+  }
+  .mockup-stage {
+    padding-bottom: 20px;
+  }
+  .landing-titolo {
+    font-size: 1.7rem;
+  }
+  .showcase-intro h2,
+  .landing-features h2,
+  .landing-final-cta h2 {
+    font-size: 1.4rem;
+  }
+  .mockup-riga {
+    flex-wrap: wrap;
+  }
+  .mockup-riga span:first-child {
+    flex: 1 0 100%;
+  }
+  .mockup-riga span:nth-child(2) {
+    display: none;
+  }
 }
